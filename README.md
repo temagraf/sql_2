@@ -26,12 +26,21 @@
 - город нахождения магазина;
 - количество пользователей, закреплённых в этом магазине.
 ```sql
-select s.first_name as Имя_сотрудника, s.last_name as Фамилия_сотрудника, ci.city as Город  as Количество_пользователей
+select concat(sta.last_name, ' ', sta.first_name) as ФИО_сотрудника_магазина, cu.store_id, count(cu.store_id) as Количество_пользователей_магазина
 from customer cu
+join store sto on sto.store_id = cu.store_id
+join staff sta on sta.store_id = sto.store_id
+group by cu.store_id, sta.staff_id
+having count(cu.store_id) > 300;
 
-join inventory i on i.inventory_id = r.inventory_id
-join film f on i.film_id = f.film_id
-order by r.rental_date desc limit 5;
+
+select concat(s.last_name, ' ', s.first_name) as ФИО_сотрудника_магазина, ci.city as Город_нахождения_магазина, count(cu.store_id) as Количество_пользователей_магазина
+from customer cu
+join address a on a.address_id = cu.customer_id
+join staff s on s.staff_id = a.address_id
+join city ci on ci.city_id = a.address_id
+group by cu.store_id
+order by ci.city desc;
 ```
 ---
 ## Задание 2
