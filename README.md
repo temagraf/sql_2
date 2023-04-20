@@ -53,7 +53,10 @@ where length > (select avg(length) from film);
 
 Получите информацию, за какой месяц была получена наибольшая сумма платежей, и добавьте информацию по количеству аренд за этот месяц.
 ```sql
-
+select month(payment_date) as Месяц, count(payment_id) as Количество_аренд
+from payment
+where month(payment_date) = (select month(payment_date) from payment group by month(payment_date) order by sum(amount) desc limit 1)
+group by month(payment_date);
 ```
 ![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-4-hw/blob/main/img/12-4-3.png "Скриншот выполнения запроса")
 
