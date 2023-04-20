@@ -26,22 +26,17 @@
 - город нахождения магазина;
 - количество пользователей, закреплённых в этом магазине.
 ```sql
-select concat(sta.last_name, ' ', sta.first_name) as ФИО_сотрудника_магазина, cu.store_id, count(cu.store_id) as Количество_пользователей_магазина
+select concat(sta.last_name, ' ', sta.first_name) as ФИО_сотрудника_магазина, ci.city as Город_нахождения_магазина, count(cu.store_id) as Количество_пользователей_магазина
 from customer cu
 join store sto on sto.store_id = cu.store_id
 join staff sta on sta.store_id = sto.store_id
-group by cu.store_id, sta.staff_id
+join address a on a.address_id = sto.address_id
+join city ci on a.city_id = ci.city_id
+group by cu.store_id, sta.staff_id, a.address_id, ci.city_id
 having count(cu.store_id) > 300;
-
-
-select concat(s.last_name, ' ', s.first_name) as ФИО_сотрудника_магазина, ci.city as Город_нахождения_магазина, count(cu.store_id) as Количество_пользователей_магазина
-from customer cu
-join address a on a.address_id = cu.customer_id
-join staff s on s.staff_id = a.address_id
-join city ci on ci.city_id = a.address_id
-group by cu.store_id
-order by ci.city desc;
 ```
+![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-4-hw/blob/main/img/12-4-1.png "Скриншот выполнения запроса")
+
 ---
 ## Задание 2
 
