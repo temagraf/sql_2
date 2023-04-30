@@ -53,10 +53,10 @@ where length > (select avg(length) from film);
 
 Получите информацию, за какой месяц была получена наибольшая сумма платежей, и добавьте информацию по количеству аренд за этот месяц.
 ```sql
-select month(payment_date) as Месяц, count(payment_id) as Количество_аренд
+select date_format(payment_date, "%c.%y") as Месяц_Год, count(payment_id) as Количество_аренд
 from payment
-where month(payment_date) = (select month(payment_date) from payment group by month(payment_date) order by sum(amount) desc limit 1)
-group by month(payment_date);
+where date_format(payment_date, "%c.%y") = (select date_format(payment_date, "%c.%y") from payment group by date_format(payment_date, "%c.%y") order by sum(amount) desc limit 1)
+group by date_format(payment_date, "%c.%y");
 ```
 ![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-4-hw/blob/main/img/12-4-3.png "Скриншот выполнения запроса")
 
@@ -65,7 +65,11 @@ group by month(payment_date);
 
 Посчитайте количество продаж, выполненных каждым продавцом. Добавьте вычисляемую колонку «Премия». Если количество продаж превышает 8000, то значение в колонке будет «Да», иначе должно быть значение «Нет».
 ```sql
-
+select concat(s.first_name, ' ', s.last_name) as Продавец,
+count(p.payment_id) as Количество_продаж,
+case when count(payment_id) > 8000 then 'Да' else 'Нет' end as Премия
+from payment p
+join staff s on s.staff_id = p.staff_id group by p.staff_id;
 ```
 ![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-4-hw/blob/main/img/12-4-4.png "Скриншот выполнения запроса")
 
@@ -74,7 +78,12 @@ group by month(payment_date);
 
 Найдите фильмы, которые ни разу не брали в аренду.
 ```sql
-
+select f.title as Фильм
+from film f
+left join inventory i on i.film_id = f.film_id
+left join rental r on r.inventory_id = i.inventory_id
+where r.rental_id is null
+order by f.title asc;
 ```
 ![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-4-hw/blob/main/img/12-4-5.png "Скриншот выполнения запроса")
 
