@@ -1,4 +1,4 @@
-# Домашнее задание к занятию «`SQL. Часть 2`» - `Барановский Станислав`
+# «`SQL. Часть 2`» - `Барановский Станислав`
 
 ### Инструкция по выполнению домашнего задания
 
@@ -35,7 +35,7 @@ join city ci on a.city_id = ci.city_id
 group by cu.store_id, sta.staff_id, a.address_id, ci.city_id
 having count(cu.store_id) > 300;
 ```
-![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-4-hw/blob/main/img/12-4-1.png "Скриншот выполнения запроса")
+![Скриншот выполнения запроса](https://github.com/temagraf/sql_2/blob/main/img/12-4-1.png "Скриншот выполнения запроса")
 
 ---
 ## Задание 2
@@ -46,7 +46,7 @@ select count(film_id)
 from film
 where length > (select avg(length) from film);
 ```
-![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-4-hw/blob/main/img/12-4-2.png "Скриншот выполнения запроса")
+![Скриншот выполнения запроса](https://github.com/temagraf/sql_2/blob/main/img/12-4-2.png "Скриншот выполнения запроса")
 
 ---
 ## Задание 3
@@ -58,33 +58,5 @@ from payment
 where date_format(payment_date, "%c.%y") = (select date_format(payment_date, "%c.%y") from payment group by date_format(payment_date, "%c.%y") order by sum(amount) desc limit 1)
 group by date_format(payment_date, "%c.%y");
 ```
-![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-4-hw/blob/main/img/12-4-3.png "Скриншот выполнения запроса")
+![Скриншот выполнения запроса](https://github.com/temagraf/sql_2/blob/main/img/12-4-3.png "Скриншот выполнения запроса")
 
----
-## Задание 4*
-
-Посчитайте количество продаж, выполненных каждым продавцом. Добавьте вычисляемую колонку «Премия». Если количество продаж превышает 8000, то значение в колонке будет «Да», иначе должно быть значение «Нет».
-```sql
-select concat(s.first_name, ' ', s.last_name) as Продавец,
-count(p.payment_id) as Количество_продаж,
-case when count(payment_id) > 8000 then 'Да' else 'Нет' end as Премия
-from payment p
-join staff s on s.staff_id = p.staff_id group by p.staff_id;
-```
-![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-4-hw/blob/main/img/12-4-4.png "Скриншот выполнения запроса")
-
----
-## Задание 5*
-
-Найдите фильмы, которые ни разу не брали в аренду.
-```sql
-select f.title as Фильм
-from film f
-left join inventory i on i.film_id = f.film_id
-left join rental r on r.inventory_id = i.inventory_id
-where r.rental_id is null
-order by f.title asc;
-```
-![Скриншот выполнения запроса](https://github.com/StanislavBaranovskii/12-4-hw/blob/main/img/12-4-5.png "Скриншот выполнения запроса")
-
----
